@@ -1,1 +1,1 @@
-# Image-Enhancer
+# Image Enhancer
