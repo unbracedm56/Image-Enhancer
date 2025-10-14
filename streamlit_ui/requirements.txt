@@ -1,0 +1,11 @@
+streamlit
+torch
+torchvision
+tensorflow
+Pillow
+numpy
+scikit-image
+huggingface_hub
+timm
+opencv-python-headless
+python-dotenv
