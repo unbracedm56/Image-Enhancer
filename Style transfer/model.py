@@ -18,7 +18,6 @@ class VGG(nn.Module):
         features = []
         for layer_num, layer in enumerate(self.model):
             x = layer(x)
-
             if str(layer_num) in self.chosen_features:
                 features.append(x)
         return features
@@ -31,18 +30,22 @@ def load_image(image_name):
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-image_size = 512
+
 
 loader = transforms.Compose([
-    transforms.Resize((image_size, image_size)),
     transforms.ToTensor(),
-    # transforms.Normalize(mean=[], std=[])
+    
 ])
+
 original_img = load_image("og.jpg")
 style_img = load_image("style.jpg")
 
+# resize style to og (NEW)
+style_img = transforms.functional.resize(
+    style_img.squeeze(0), original_img.shape[2:]
+).unsqueeze(0)
+
 model = VGG().to(device).eval()
-# generated = torch.randn(original_img.shape, device=device, requires_grad=True)
 generated = original_img.clone().requires_grad_(True)
 
 # Hyperparameters
@@ -65,7 +68,6 @@ for step in range(total_steps):
         batch_size, channel, height, width = gen_feature.shape
         original_loss += torch.mean((gen_feature - orig_feature) ** 2)
 
-        #
         G = gen_feature.view(channel, height * width).mm(
             gen_feature.view(channel, height * width).t()
         )
@@ -84,8 +86,6 @@ for step in range(total_steps):
         print(f"Step [{step}/{total_steps}] Loss: {total_loss.item():.4f}")
         save_image(generated, "generated.png")
 
-    # stop after 20 steps
     if step == 2000:
         print("Stopping after 2000 steps.")
         break
-
