@@ -1,11 +1,11 @@
 streamlit
+streamlit-cropper
+Pillow
 torch
 torchvision
 tensorflow
-Pillow
 numpy
 scikit-image
-huggingface_hub
+huggingface-hub
 timm
-opencv-python-headless
-python-dotenv
+opencv-python
